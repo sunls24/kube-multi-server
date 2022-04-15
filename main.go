@@ -30,6 +30,7 @@ func main() {
 	g := gin.Default()
 	_ = g.SetTrustedProxies(nil)
 	v1 := g.Group("api/v1")
+	router.InitCommon(v1)
 	router.InitKube(v1, connect)
 
 	log.Info("start http listen addr: ", *addr)
