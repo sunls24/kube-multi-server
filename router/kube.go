@@ -19,6 +19,6 @@ func InitKube(r *gin.RouterGroup, connect *sql.DB) {
 	r.GET(base, kube.ListKube)
 	r.GET(base+id, kube.GetKube)
 	r.POST(base, kube.PostKube)
-	r.PATCH(base, kube.PutKube)
+	r.PUT(base, kube.PutKube)
 	r.DELETE(base+id, kube.DeleteKube)
 }

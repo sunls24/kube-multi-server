@@ -5,7 +5,6 @@ import (
 	"github.com/pkg/errors"
 	"kube-multi-server/model"
 	"kube-multi-server/service"
-	"net/http"
 	"strconv"
 )
 
@@ -20,10 +19,10 @@ func NewKubeController(s service.KubeService) *kubeController {
 func (k *kubeController) ListKube(ctx *gin.Context) {
 	list, err := k.service.ListKube()
 	if err != nil {
-		ctx.String(http.StatusOK, err.Error())
+		Error(ctx, err)
 		return
 	}
-	ctx.JSON(http.StatusOK, list)
+	Success(ctx, list)
 }
 
 func (k *kubeController) GetKube(ctx *gin.Context) {
