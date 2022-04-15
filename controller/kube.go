@@ -12,8 +12,8 @@ type kubeController struct {
 	service service.KubeService
 }
 
-func NewKubeController(s service.KubeService) *kubeController {
-	return &kubeController{service: s}
+func NewKubeController(svc service.KubeService) *kubeController {
+	return &kubeController{service: svc}
 }
 
 func (k *kubeController) ListKube(ctx *gin.Context) {
@@ -50,7 +50,8 @@ func (k *kubeController) PostKube(ctx *gin.Context) {
 		Error(ctx, err)
 		return
 	}
-	Success(ctx, map[string]interface{}{"id": id})
+	kube.Id = id
+	Success(ctx, kube)
 }
 
 func (k *kubeController) PutKube(ctx *gin.Context) {

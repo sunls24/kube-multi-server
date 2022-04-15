@@ -3,7 +3,7 @@ package model
 import "database/sql"
 
 type Kube struct {
-	Id        int    `json:"id"`
+	Id        int64  `json:"id"`
 	Name      string `json:"name"`
 	Config    string `json:"config"`
 	Namespace string `json:"namespace"`
