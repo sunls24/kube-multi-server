@@ -7,7 +7,9 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
+	"io/ioutil"
 	"kube-multi-server/router"
+	"strings"
 )
 
 func init() {
@@ -27,6 +29,11 @@ func main() {
 		log.Fatal(errors.Wrap(err, "sql.open"))
 	}
 
+	err = createTable(connect)
+	if err != nil {
+		log.Fatal(errors.Wrap(err, "create SQL"))
+	}
+
 	g := gin.Default()
 	_ = g.SetTrustedProxies(nil)
 	v1 := g.Group("api/v1")
@@ -35,4 +42,34 @@ func main() {
 
 	log.Info("start http listen addr: ", *addr)
 	log.Fatal(g.Run(*addr))
+}
+
+const sqlDir = "./SQL/"
+
+// 创建数据表，每次启动都会执行，所以SQL中需包含(if not exists)
+func createTable(connect *sql.DB) error {
+	files, err := ioutil.ReadDir(sqlDir)
+	if err != nil {
+		return errors.Wrapf(err, "read dir %s", sqlDir)
+	}
+
+	for _, f := range files {
+		if f.IsDir() {
+			continue
+		}
+		if !strings.Contains(strings.ToLower(f.Name()), ".sql") {
+			continue
+		}
+
+		path := sqlDir + f.Name()
+		data, err := ioutil.ReadFile(path)
+		if err != nil {
+			return errors.Wrapf(err, "read file %s", path)
+		}
+		_, err = connect.Exec(string(data))
+		if err != nil {
+			return errors.Wrapf(err, "exec SQL (%s)", path)
+		}
+	}
+	return nil
 }
