@@ -22,9 +22,10 @@ func init() {
 
 func main() {
 	addr := flag.String("addr", ":8088", "http service address")
+	dbPath := flag.String("db", "/opt/data.db", "sqlite file path")
 	flag.Parse()
 
-	connect, err := sql.Open("sqlite3", "./data.db")
+	connect, err := sql.Open("sqlite3", *dbPath)
 	if err != nil {
 		log.Fatal(errors.Wrap(err, "sql.open"))
 	}
@@ -44,7 +45,7 @@ func main() {
 	log.Fatal(g.Run(*addr))
 }
 
-const sqlDir = "./SQL/"
+const sqlDir = "./sql/"
 
 // 创建数据表，每次启动都会执行，所以SQL中需包含(if not exists)
 func createTable(connect *sql.DB) error {
