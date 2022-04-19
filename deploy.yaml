@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kube-multi-server
+  labels:
+    app: kube-multi-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kube-multi-server
+  template:
+    metadata:
+      labels:
+        app: kube-multi-server
+    spec:
+      containers:
+        - name: server
+          image: 10.10.236.107:8099/k8s/kube-multi-server:v0.1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8088
+          volumeMounts:
+            - name: data
+              mountPath: /opt/data
+      volumes:
+        - name: data
+          hostPath:
+            path: /kube-multi
+            type: DirectoryOrCreate
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kube-multi-server
+spec:
+  type: NodePort
+  selector:
+    app: kube-multi-server
+  ports:
+    - protocol: TCP
+      port: 8088
+      nodePort: 32711

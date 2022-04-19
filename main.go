@@ -22,7 +22,7 @@ func init() {
 
 func main() {
 	addr := flag.String("addr", ":8088", "http service address")
-	dbPath := flag.String("db", "/opt/data.db", "sqlite file path")
+	dbPath := flag.String("db", "/opt/data/data.db", "sqlite file path")
 	flag.Parse()
 
 	connect, err := sql.Open("sqlite3", *dbPath)
