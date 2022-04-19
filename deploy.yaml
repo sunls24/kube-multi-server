@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: server
-          image: 10.10.236.107:8099/k8s/kube-multi-server:v0.1
+          image: kube-multi-server:v0.1
           imagePullPolicy: Always
           ports:
             - containerPort: 8088
